@@ -8,6 +8,9 @@ Mobile browsers (Chrome on Android, Safari on iOS) do not support `getDisplayMed
 
 The app UI is available in English and Turkish (picked from the device language).
 
+- [Known issues and next steps](docs/known-issues.md)
+- [Building for iOS without a Mac](docs/ios-build.md)
+
 ## Requirements
 
 | Tool | Version |
