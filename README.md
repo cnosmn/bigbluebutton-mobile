@@ -35,6 +35,37 @@ npm run prebuild
 
 Bağlı cihazları görmek için `adb devices` komutunu kullanabilirsiniz.
 
+## Release APK
+
+Release derlemeleri, proje kökündeki `keystore.properties` dosyasında tanımlı anahtarla imzalanır. Bu dosya ve anahtar repoya eklenmez. Dosya yoksa release, debug anahtarıyla imzalanır.
+
+1. Anahtar oluşturun (bir kez yapılır):
+
+   ```bash
+   mkdir -p credentials
+   keytool -genkeypair -v -storetype PKCS12 -keystore credentials/derslik-release.jks \
+     -alias derslik -keyalg RSA -keysize 4096 -validity 10000
+   ```
+
+2. Proje kökünde `keystore.properties` dosyasını oluşturun:
+
+   ```properties
+   storeFile=credentials/derslik-release.jks
+   storePassword=...
+   keyAlias=derslik
+   keyPassword=...
+   ```
+
+3. Derleyin:
+
+   ```bash
+   npm run build:apk      # çıktı: dist/derslik-<sürüm>.apk (yalnızca ARM: armeabi-v7a, arm64-v8a)
+   ```
+
+> ⚠️ Anahtarı ve şifreleri repo dışında yedekleyin. Anahtar kaybolursa yeni sürümler eski kurulumların üzerine kurulamaz; kullanıcıların uygulamayı silip yeniden kurması gerekir. Play Store'da yayınlamak için ayrıca `./gradlew bundleRelease` ile AAB üretilir.
+
+Yeni sürüm çıkarmadan önce `app.config.ts` içindeki `version` alanını ve `android.versionCode` değerini artırın.
+
 ## Markalama
 
 Uygulama adı, paket adı (`applicationId`), URL şeması, renkler ve ikon yolları tek bir dosyada tutulur: [`brand.json`](brand.json).

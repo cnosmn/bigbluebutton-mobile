@@ -47,3 +47,6 @@ keystore.properties
 # local module build outputs
 modules/*/android/build/
 modules/*/android/.cxx/
+
+# release signing (keep a backup outside the repo)
+credentials/

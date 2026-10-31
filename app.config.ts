@@ -18,6 +18,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: brand.androidPackage,
+    versionCode: 1,
     // Requested at runtime when the meeting page asks for microphone/camera.
     permissions: [
       'android.permission.CAMERA',
@@ -34,7 +35,7 @@ const config: ExpoConfig = {
   web: {
     favicon: brand.icons.favicon,
   },
-  plugins: ['expo-router', 'expo-status-bar', 'expo-localization'],
+  plugins: ['expo-router', 'expo-status-bar', 'expo-localization', './plugins/withReleaseSigning'],
   extra: {
     brandColors: brand.colors,
   },
