@@ -28,6 +28,23 @@ const KEEP_AWAKE_TAG = 'class';
 // is handed to the OS.
 const IN_APP_SCHEMES = ['http:', 'https:', 'about:', 'blob:', 'data:'];
 
+// BigBlueButton's action bar does not fit a phone's ~390 CSS px width. On
+// phone-sized screens (shortest side < 600), render the class page at ~480
+// CSS px and let the viewport scale it down. Tablets are left untouched.
+const FIT_CLASS_TO_PHONE = `
+  (function () {
+    if (location.pathname.indexOf('/html5client/') === -1) return;
+    var shortest = Math.min(screen.width, screen.height);
+    if (shortest >= 600) return;
+    var scale = Math.max(0.7, shortest / 480).toFixed(2);
+    var meta = document.querySelector('meta[name=viewport]');
+    if (!meta) return;
+    meta.content = 'width=device-width,initial-scale=' + scale + ',maximum-scale=' + scale +
+      ',user-scalable=no,viewport-fit=cover';
+  })();
+  true;
+`;
+
 function isInAppUrl(url: string): boolean {
   return IN_APP_SCHEMES.some((scheme) => url.startsWith(scheme));
 }
@@ -129,6 +146,7 @@ function PortalWebView({ url }: { url: string }) {
           applicationNameForUserAgent={meetingApplicationName()}
           onMessage={(event) => handleBridgeMessage(webViewRef, event.nativeEvent.data)}
           onNavigationStateChange={onNavigationStateChange}
+          injectedJavaScript={FIT_CLASS_TO_PHONE}
           domStorageEnabled
           thirdPartyCookiesEnabled
           mediaPlaybackRequiresUserAction={false}

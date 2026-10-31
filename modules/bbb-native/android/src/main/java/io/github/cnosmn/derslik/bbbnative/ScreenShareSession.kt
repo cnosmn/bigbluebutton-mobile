@@ -3,11 +3,13 @@ package io.github.cnosmn.derslik.bbbnative
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ApplicationInfo
+import android.hardware.display.DisplayManager
 import android.media.projection.MediaProjection
-import android.os.Build
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
-import android.view.WindowManager
+import android.view.Display
 import org.webrtc.AddIceObserver
 import org.webrtc.DataChannel
 import org.webrtc.DefaultVideoDecoderFactory
@@ -85,6 +87,25 @@ class ScreenShareSession(
 
   @Volatile private var disposed = false
 
+  private val displayManager = appContext.getSystemService(DisplayManager::class.java)
+  private var currentSize: Pair<Int, Int>
+
+  // The capture size is fixed when the virtual display is created; without
+  // this a landscape screen would be squeezed into the portrait frame.
+  private val rotationListener = object : DisplayManager.DisplayListener {
+    override fun onDisplayChanged(displayId: Int) {
+      if (displayId != Display.DEFAULT_DISPLAY || disposed) return
+      val size = captureSize()
+      if (size == currentSize) return
+      currentSize = size
+      Log.i(TAG, "Display rotated, capturing ${size.first}x${size.second}")
+      capturer.changeCaptureFormat(size.first, size.second, FPS)
+    }
+
+    override fun onDisplayAdded(displayId: Int) {}
+    override fun onDisplayRemoved(displayId: Int) {}
+  }
+
   init {
     capturer = ScreenCapturerAndroid(
       consent,
@@ -98,8 +119,10 @@ class ScreenShareSession(
     textureHelper = SurfaceTextureHelper.create("BbbScreenCapture", eglBase.eglBaseContext)
     videoSource = factory.createVideoSource(true)
     capturer.initialize(textureHelper, appContext, videoSource.capturerObserver)
-    val (width, height) = captureSize()
+    currentSize = captureSize()
+    val (width, height) = currentSize
     capturer.startCapture(width, height, FPS)
+    displayManager.registerDisplayListener(rotationListener, Handler(Looper.getMainLooper()))
     videoTrack = factory.createVideoTrack("screen0", videoSource)
 
     val config = PeerConnection.RTCConfiguration(iceServers).apply {
@@ -153,6 +176,7 @@ class ScreenShareSession(
   fun dispose() {
     if (disposed) return
     disposed = true
+    displayManager.unregisterDisplayListener(rotationListener)
     try {
       capturer.stopCapture()
     } catch (e: Exception) {
@@ -188,15 +212,11 @@ class ScreenShareSession(
     return even((width * scale).roundToInt()) to even((height * scale).roundToInt())
   }
 
+  // Physical size in the current rotation.
   private fun screenSize(): Pair<Int, Int> {
-    val windowManager = context.getSystemService(WindowManager::class.java)
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      val bounds = windowManager.maximumWindowMetrics.bounds
-      return bounds.width() to bounds.height()
-    }
     val metrics = DisplayMetrics()
     @Suppress("DEPRECATION")
-    windowManager.defaultDisplay.getRealMetrics(metrics)
+    displayManager.getDisplay(Display.DEFAULT_DISPLAY).getRealMetrics(metrics)
     return metrics.widthPixels to metrics.heightPixels
   }
 
