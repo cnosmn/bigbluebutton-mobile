@@ -1,0 +1,17 @@
+{
+  "name": "Derslik",
+  "slug": "derslik",
+  "scheme": "derslik",
+  "androidPackage": "io.github.cnosmn.derslik",
+  "iosBundleIdentifier": "io.github.cnosmn.derslik",
+  "colors": {
+    "primary": "#FED233",
+    "onPrimary": "#000000"
+  },
+  "icons": {
+    "app": "./assets/brand/icon.png",
+    "androidForeground": "./assets/brand/android-foreground.png",
+    "androidMonochrome": "./assets/brand/android-monochrome.png",
+    "favicon": "./assets/brand/favicon.png"
+  }
+}
