@@ -42,7 +42,7 @@ Uygulama adı, paket adı (`applicationId`), URL şeması, renkler ve ikon yolla
 
 ## Lisans
 
-Bu proje **GNU Lesser General Public License v3.0** (LGPL-3.0-only) ile lisanslanmıştır. Lisans metinleri [`LICENSE`](LICENSE) (LGPL-3.0) ve [`COPYING`](COPYING) (GPL-3.0; LGPL bu metne atıfla tanımlanır) dosyalarındadır.
+Bu proje **GNU Lesser General Public License v3.0** (LGPL-3.0-only) ile lisanslanmıştır. Lisans metinleri [`COPYING.LESSER`](COPYING.LESSER) (LGPL-3.0) ve [`COPYING`](COPYING) (GPL-3.0; LGPL bu metne atıfla tanımlanır) dosyalarındadır.
 
 LGPL-3.0'ın pratikte anlamı:
 
