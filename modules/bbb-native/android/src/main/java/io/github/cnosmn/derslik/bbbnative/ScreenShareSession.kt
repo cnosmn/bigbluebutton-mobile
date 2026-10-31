@@ -21,6 +21,7 @@ import org.webrtc.MediaConstraints
 import org.webrtc.MediaStream
 import org.webrtc.PeerConnection
 import org.webrtc.PeerConnectionFactory
+import org.webrtc.RTCStatsReport
 import org.webrtc.RtpParameters
 import org.webrtc.RtpTransceiver
 import org.webrtc.ScreenCapturerAndroid
@@ -53,8 +54,11 @@ class ScreenShareSession(
 
   companion object {
     private const val TAG = "BbbScreenShare"
-    private const val MAX_LONG_SIDE = 1920
+    // Phones without a VP8 hardware encoder (common on recent Qualcomm chips)
+    // encode in software; at 1920 px they become CPU-bound and blurry.
+    private const val MAX_LONG_SIDE = 1280
     private const val FPS = 15
+    private const val STATS_INTERVAL_MS = 5000L
 
     private val eglBase: EglBase by lazy { EglBase.create() }
     private var factoryInstance: PeerConnectionFactory? = null
@@ -80,12 +84,26 @@ class ScreenShareSession(
   private val factory = sharedFactory(appContext)
   private val capturer: ScreenCapturerAndroid
   private val textureHelper: SurfaceTextureHelper
+  private val frameRepeater: FrameRepeater
   private val videoSource: VideoSource
   private val videoTrack: VideoTrack
   private val peerConnection: PeerConnection
   private val transceiver: RtpTransceiver
 
   @Volatile private var disposed = false
+
+  // Debug builds log what is actually being sent, to diagnose quality issues.
+  private val debuggable = (context.applicationInfo.flags and ApplicationInfo.FLAG_DEBUGGABLE) != 0
+  private val statsHandler = Handler(Looper.getMainLooper())
+  private var lastBytesSent = 0L
+  private var lastStatsTimeUs = 0.0
+  private val statsLogger = object : Runnable {
+    override fun run() {
+      if (disposed) return
+      peerConnection.getStats { report -> logStats(report) }
+      statsHandler.postDelayed(this, STATS_INTERVAL_MS)
+    }
+  }
 
   private val displayManager = appContext.getSystemService(DisplayManager::class.java)
   private var currentSize: Pair<Int, Int>
@@ -118,7 +136,8 @@ class ScreenShareSession(
     )
     textureHelper = SurfaceTextureHelper.create("BbbScreenCapture", eglBase.eglBaseContext)
     videoSource = factory.createVideoSource(true)
-    capturer.initialize(textureHelper, appContext, videoSource.capturerObserver)
+    frameRepeater = FrameRepeater(videoSource.capturerObserver, textureHelper.handler, FPS)
+    capturer.initialize(textureHelper, appContext, frameRepeater)
     currentSize = captureSize()
     val (width, height) = currentSize
     capturer.startCapture(width, height, FPS)
@@ -148,6 +167,7 @@ class ScreenShareSession(
         peerConnection.setLocalDescription(object : SdpObserverAdapter() {
           override fun onSetSuccess() {
             keepResolutionUnderLoad()
+            if (debuggable) statsHandler.postDelayed(statsLogger, STATS_INTERVAL_MS)
             onResult(Result.success(description.description))
           }
 
@@ -176,6 +196,7 @@ class ScreenShareSession(
   fun dispose() {
     if (disposed) return
     disposed = true
+    statsHandler.removeCallbacks(statsLogger)
     displayManager.unregisterDisplayListener(rotationListener)
     try {
       capturer.stopCapture()
@@ -186,6 +207,8 @@ class ScreenShareSession(
     videoTrack.dispose()
     videoSource.dispose()
     capturer.dispose()
+    // Runs on the capture thread before the texture helper is released.
+    textureHelper.handler.post { frameRepeater.stop() }
     textureHelper.dispose()
     Log.i(TAG, "Screen share disposed")
   }
@@ -221,6 +244,26 @@ class ScreenShareSession(
   }
 
   private fun even(value: Int) = value and 1.inv()
+
+  private fun logStats(report: RTCStatsReport) {
+    val stats = report.statsMap.values
+    val outbound = stats.firstOrNull { it.type == "outbound-rtp" && it.members["kind"] == "video" } ?: return
+    val m = outbound.members
+    val bytesSent = (m["bytesSent"] as? Number)?.toLong() ?: 0L
+    val kbps = if (lastStatsTimeUs > 0) {
+      ((bytesSent - lastBytesSent) * 8 / ((outbound.timestampUs - lastStatsTimeUs) / 1000.0)).toInt()
+    } else 0
+    lastBytesSent = bytesSent
+    lastStatsTimeUs = outbound.timestampUs
+    val remote = stats.firstOrNull { it.type == "remote-inbound-rtp" && it.members["kind"] == "video" }?.members
+    Log.i(
+      TAG,
+      "stats ${m["frameWidth"]}x${m["frameHeight"]}@${m["framesPerSecond"]} " +
+        "sent=${kbps}kbps target=${(m["targetBitrate"] as? Number)?.toInt()?.div(1000)}kbps " +
+        "encoder=${m["encoderImplementation"]} limit=${m["qualityLimitationReason"]} " +
+        "lost=${remote?.get("packetsLost")} rtt=${remote?.get("roundTripTime")}",
+    )
+  }
 
   private inner class PeerObserver : PeerConnection.Observer {
     override fun onSignalingChange(state: PeerConnection.SignalingState) =
