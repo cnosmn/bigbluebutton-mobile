@@ -1,6 +1,6 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import { useKeepAwake } from 'expo-keep-awake';
-import { useCallback, useEffect, useState } from 'react';
+import { type ComponentRef, useCallback, useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -15,8 +15,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { WebView } from 'react-native-webview';
 import type { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 
+import { handleBridgeMessage } from '../bridge/handler';
 import { t } from '../i18n';
-import { meetingUserAgent } from '../lib/userAgent';
+import { meetingApplicationName, meetingUserAgent } from '../lib/userAgent';
 import { colors } from '../theme';
 
 // Schemes the meeting page itself may load; anything else (mailto:, tel:,
@@ -33,6 +34,7 @@ export default function Meeting() {
   const [failed, setFailed] = useState(false);
   // Changing the key remounts the WebView, e.g. after its renderer crashed.
   const [webViewKey, setWebViewKey] = useState(0);
+  const webViewRef = useRef<ComponentRef<typeof WebView>>(null);
 
   // A class can run for a long time without touch input.
   useKeepAwake();
@@ -84,9 +86,12 @@ export default function Meeting() {
       ) : (
         <WebView
           key={webViewKey}
+          ref={webViewRef}
           source={{ uri: url }}
           style={styles.webview}
           userAgent={meetingUserAgent()}
+          applicationNameForUserAgent={meetingApplicationName()}
+          onMessage={(event) => handleBridgeMessage(webViewRef, event.nativeEvent.data)}
           domStorageEnabled
           thirdPartyCookiesEnabled
           mediaPlaybackRequiresUserAction={false}
