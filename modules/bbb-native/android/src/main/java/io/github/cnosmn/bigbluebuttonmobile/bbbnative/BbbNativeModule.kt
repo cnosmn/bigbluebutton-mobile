@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.View
 import android.webkit.WebSettings
 import expo.modules.kotlin.Promise
 import expo.modules.kotlin.exception.Exceptions
@@ -54,6 +55,17 @@ class BbbNativeModule : Module() {
     Function("getDefaultUserAgent") {
       WebSettings.getDefaultUserAgent(context)
     }
+
+    // Android's autofill popup (saved e-mails/passwords) takes focus from the
+    // WebView and closes the keyboard on every keystroke in login forms.
+    // Excluding the window from autofill keeps the keyboard and its own
+    // suggestions working.
+    AsyncFunction("disableAutofill") {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        appContext.currentActivity?.window?.decorView?.importantForAutofill =
+          View.IMPORTANT_FOR_AUTOFILL_NO_EXCLUDE_DESCENDANTS
+      }
+    }.runOnQueue(Queues.MAIN)
 
     // Shows the system "start recording or casting?" dialog and starts the
     // foreground service. Resolves once capturing is allowed.

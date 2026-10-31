@@ -8,5 +8,8 @@ public class BbbNativeModule: Module {
     Function("getDefaultUserAgent") { () -> String? in
       return nil
     }
+
+    // Android-only workaround; nothing to do on iOS.
+    AsyncFunction("disableAutofill") {}
   }
 }

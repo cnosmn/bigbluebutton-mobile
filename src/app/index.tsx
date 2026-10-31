@@ -72,6 +72,10 @@ function PortalWebView({ url }: { url: string }) {
   // Also stops any screen share when the app is closed.
   useEffect(() => attachScreenShareEvents(webViewRef), []);
 
+  useEffect(() => {
+    BbbNative.disableAutofill().catch(() => {});
+  }, []);
+
   // A class can run for a long time without touch input. Outside of a class
   // there is nothing to share, so make sure capture is not left running.
   useEffect(() => {

@@ -18,6 +18,9 @@ declare class BbbNativeModule extends NativeModule<BbbNativeEvents> {
   /** The WebView's built-in user agent (Android); null where not applicable. */
   getDefaultUserAgent(): string | null;
 
+  /** Keeps Android's autofill popup from closing the keyboard in the WebView. */
+  disableAutofill(): Promise<void>;
+
   /** Asks the user for screen capture consent; resolves when capturing may start. */
   initializeScreenShare(): Promise<void>;
   /** Takes BBB's STUN/TURN dictionary as JSON; resolves with the SDP offer. */
