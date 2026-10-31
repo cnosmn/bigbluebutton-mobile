@@ -8,7 +8,7 @@
 
   <application>
     <service
-      android:name="io.github.cnosmn.derslik.bbbnative.ScreenShareService"
+      android:name="io.github.cnosmn.bigbluebuttonmobile.bbbnative.ScreenShareService"
       android:exported="false"
       android:foregroundServiceType="mediaProjection" />
   </application>

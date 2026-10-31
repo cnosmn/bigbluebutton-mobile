@@ -1,7 +1,7 @@
 # Building for iOS without a Mac
 
 iOS apps can only be built on macOS with Xcode. This guide covers building
-Derslik on a cloud Mac and distributing it through TestFlight.
+BBB Mobile on a cloud Mac and distributing it through TestFlight.
 
 ## Current state of iOS support
 
@@ -45,9 +45,9 @@ Until then an iOS build is useful for checking the rest of the app.
 - An **Apple Developer Program** membership (paid yearly). TestFlight and App
   Store distribution are not possible without it.
 - The bundle identifier from `brand.json` (`iosBundleIdentifier`, currently
-  `io.github.cnosmn.derslik`) registered under Certificates, Identifiers &
+  `io.github.cnosmn.bigbluebuttonmobile`) registered under Certificates, Identifiers &
   Profiles. Use a separate identifier for the broadcast extension, for example
-  `io.github.cnosmn.derslik.broadcast`.
+  `io.github.cnosmn.bigbluebuttonmobile.broadcast`.
 - An app record in **App Store Connect** with that bundle identifier.
 - An **App Store Connect API key** (Users and Access → Integrations → App Store
   Connect API) with the *App Manager* role: issuer ID, key ID and the `.p8` file.
@@ -141,9 +141,9 @@ jobs:
         env:
           EXPO_PUBLIC_PORTAL_URL: ${{ secrets.PORTAL_URL }}
         run: |
-          xcodebuild -workspace ios/Derslik.xcworkspace -scheme Derslik \
+          xcodebuild -workspace ios/BBBMobile.xcworkspace -scheme BBBMobile \
             -configuration Release -destination 'generic/platform=iOS' \
-            -archivePath build/Derslik.xcarchive archive \
+            -archivePath build/BBBMobile.xcarchive archive \
             DEVELOPMENT_TEAM=${{ secrets.APPLE_TEAM_ID }} \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8 \
@@ -160,7 +160,7 @@ jobs:
             <key>teamID</key><string>${{ secrets.APPLE_TEAM_ID }}</string>
           </dict></plist>
           EOF
-          xcodebuild -exportArchive -archivePath build/Derslik.xcarchive \
+          xcodebuild -exportArchive -archivePath build/BBBMobile.xcarchive \
             -exportOptionsPlist ExportOptions.plist -exportPath build \
             -allowProvisioningUpdates \
             -authenticationKeyPath ~/private_keys/AuthKey_${{ secrets.ASC_KEY_ID }}.p8 \
@@ -186,7 +186,7 @@ then Codemagic's `xcode-project use-profiles`, `xcode-project build-ipa` and the
 ## TestFlight
 
 - After upload, App Store Connect processes the build (usually 10–30 minutes)
-  and asks for export compliance; Derslik only uses standard HTTPS/TLS and
+  and asks for export compliance; BBB Mobile only uses standard HTTPS/TLS and
   WebRTC encryption, which is exempt, so answer accordingly.
 - **Internal testers** (up to 100 members of your App Store Connect team) can
   install it right away through the TestFlight app.

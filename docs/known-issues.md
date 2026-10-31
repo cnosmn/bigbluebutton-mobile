@@ -80,6 +80,6 @@ BigBlueButton 3.0.16 with bbb-webrtc-sfu (mediasoup) and Greenlight.
    Info.plist keys, then build through EAS or GitHub Actions
    ([ios-build.md](ios-build.md)).
 5. Replace the placeholder icons with real artwork (`assets/brand/`).
-6. Optional: deep links (`derslik://` and Android App Links, which need an
+6. Optional: deep links (`bbbmobile://` and Android App Links, which need an
    `assetlinks.json` on the server) if join links are ever shared directly.
 7. Optional: Play Store release (AAB, store listing, privacy policy).

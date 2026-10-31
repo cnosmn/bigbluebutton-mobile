@@ -1,8 +1,8 @@
-# Derslik
+# BBB Mobile
 
 An open source mobile app for joining BigBlueButton 3.0 classes from a tablet and **sharing the tablet's screen**.
 
-Mobile browsers (Chrome on Android, Safari on iOS) do not support `getDisplayMedia`, so a tablet cannot share its screen from the browser. Derslik opens BigBlueButton in a WebView, captures the screen natively and sends it straight to BigBlueButton's media server (bbb-webrtc-sfu). It does this through the bridge that BigBlueButton's web client provides for mobile apps.
+Mobile browsers (Chrome on Android, Safari on iOS) do not support `getDisplayMedia`, so a tablet cannot share its screen from the browser. BBB Mobile opens BigBlueButton in a WebView, captures the screen natively and sends it straight to BigBlueButton's media server (bbb-webrtc-sfu). It does this through the bridge that BigBlueButton's web client provides for mobile apps.
 
 > **Status:** early development. Android only for now; iOS support will follow.
 
@@ -48,23 +48,23 @@ Release builds are signed with the key described in `keystore.properties` at the
 
    ```bash
    mkdir -p credentials
-   keytool -genkeypair -v -storetype PKCS12 -keystore credentials/derslik-release.jks \
-     -alias derslik -keyalg RSA -keysize 4096 -validity 10000
+   keytool -genkeypair -v -storetype PKCS12 -keystore credentials/bbb-mobile-release.jks \
+     -alias bbb-mobile -keyalg RSA -keysize 4096 -validity 10000
    ```
 
 2. Create `keystore.properties` at the project root:
 
    ```properties
-   storeFile=credentials/derslik-release.jks
+   storeFile=credentials/bbb-mobile-release.jks
    storePassword=...
-   keyAlias=derslik
+   keyAlias=bbb-mobile
    keyPassword=...
    ```
 
 3. Build:
 
    ```bash
-   npm run build:apk      # output: dist/derslik-<version>.apk (ARM only: armeabi-v7a, arm64-v8a)
+   npm run build:apk      # output: dist/bbb-mobile-<version>.apk (ARM only: armeabi-v7a, arm64-v8a)
    ```
 
 > ⚠️ Back up the key and its passwords outside the repository. If the key is lost, new versions cannot be installed over existing ones and users have to uninstall and reinstall the app. For the Play Store, build an AAB with `./gradlew bundleRelease`.

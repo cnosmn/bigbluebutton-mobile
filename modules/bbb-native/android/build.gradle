@@ -3,11 +3,11 @@ plugins {
   id 'expo-module-gradle-plugin'
 }
 
-group = 'io.github.cnosmn.derslik.bbbnative'
+group = 'io.github.cnosmn.bigbluebuttonmobile.bbbnative'
 version = '0.1.0'
 
 android {
-  namespace "io.github.cnosmn.derslik.bbbnative"
+  namespace "io.github.cnosmn.bigbluebuttonmobile.bbbnative"
   defaultConfig {
     versionCode 1
     versionName "0.1.0"

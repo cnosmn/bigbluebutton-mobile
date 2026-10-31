@@ -4,6 +4,6 @@
     "modules": ["BbbNativeModule"]
   },
   "android": {
-    "modules": ["io.github.cnosmn.derslik.bbbnative.BbbNativeModule"]
+    "modules": ["io.github.cnosmn.bigbluebuttonmobile.bbbnative.BbbNativeModule"]
   }
 }

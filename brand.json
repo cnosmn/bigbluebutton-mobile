@@ -1,9 +1,9 @@
 {
-  "name": "Derslik",
-  "slug": "derslik",
-  "scheme": "derslik",
-  "androidPackage": "io.github.cnosmn.derslik",
-  "iosBundleIdentifier": "io.github.cnosmn.derslik",
+  "name": "BBB Mobile",
+  "slug": "bbb-mobile",
+  "scheme": "bbbmobile",
+  "androidPackage": "io.github.cnosmn.bigbluebuttonmobile",
+  "iosBundleIdentifier": "io.github.cnosmn.bigbluebuttonmobile",
   "colors": {
     "primary": "#FED233",
     "onPrimary": "#000000"

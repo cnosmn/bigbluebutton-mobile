@@ -1,4 +1,4 @@
-package io.github.cnosmn.derslik.bbbnative
+package io.github.cnosmn.bigbluebuttonmobile.bbbnative
 
 import android.os.Handler
 import android.os.SystemClock

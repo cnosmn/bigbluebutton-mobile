@@ -1,4 +1,4 @@
-package io.github.cnosmn.derslik.bbbnative
+package io.github.cnosmn.bigbluebuttonmobile.bbbnative
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -23,7 +23,7 @@ class ScreenShareService : Service() {
   companion object {
     private const val CHANNEL_ID = "bbb_screen_share"
     private const val NOTIFICATION_ID = 4201
-    private const val ACTION_STOP = "io.github.cnosmn.derslik.bbbnative.STOP_SCREEN_SHARE"
+    private const val ACTION_STOP = "io.github.cnosmn.bigbluebuttonmobile.bbbnative.STOP_SCREEN_SHARE"
 
     /** Called on the main thread once startForeground() ran; the error is null on success. */
     @Volatile var onStarted: ((error: Exception?) -> Unit)? = null
