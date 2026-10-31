@@ -8,7 +8,7 @@ const config: ExpoConfig = {
   name: brand.name,
   slug: brand.slug,
   scheme: brand.scheme,
-  version: '0.1.1',
+  version: '0.1.2',
   orientation: 'default',
   icon: brand.icons.app,
   userInterfaceStyle: 'light',
@@ -18,7 +18,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: brand.androidPackage,
-    versionCode: 2,
+    versionCode: 3,
     // Requested at runtime when the meeting page asks for microphone/camera.
     permissions: [
       'android.permission.CAMERA',
