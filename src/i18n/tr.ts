@@ -1,18 +1,11 @@
 export default {
-  home: {
-    subtitle: 'BigBlueButton derslerine tabletten katılın ve ekranınızı paylaşın.',
-    urlLabel: 'Ders bağlantısı',
-    urlPlaceholder: 'https://sunucu.ornek.com/...',
-    join: 'Derse katıl',
-    invalidUrl: 'Geçerli bir https bağlantısı girin.',
-  },
-  meeting: {
+  portal: {
+    notConfigured: 'Sunucu adresi ayarlanmamış (EXPO_PUBLIC_PORTAL_URL).',
     leaveTitle: 'Dersten çıkılsın mı?',
-    leaveMessage: 'Ders ekranı kapanacak.',
+    leaveMessage: 'Ders ekranı kapanacak ve ana sayfaya dönülecek.',
     leave: 'Çık',
     cancel: 'Vazgeç',
-    loadError: 'Sayfa yüklenemedi.',
+    loadError: 'Sayfa yüklenemedi. İnternet bağlantınızı kontrol edin.',
     retry: 'Tekrar dene',
-    back: 'Ana ekrana dön',
   },
 };

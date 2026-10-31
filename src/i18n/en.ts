@@ -1,21 +1,14 @@
 import type { Messages } from '.';
 
 const en: Messages = {
-  home: {
-    subtitle: 'Join BigBlueButton classes from your tablet and share your screen.',
-    urlLabel: 'Class link',
-    urlPlaceholder: 'https://server.example.com/...',
-    join: 'Join class',
-    invalidUrl: 'Enter a valid https link.',
-  },
-  meeting: {
+  portal: {
+    notConfigured: 'The server address is not configured (EXPO_PUBLIC_PORTAL_URL).',
     leaveTitle: 'Leave the class?',
-    leaveMessage: 'The class screen will be closed.',
+    leaveMessage: 'The class screen will close and the home page will open.',
     leave: 'Leave',
     cancel: 'Cancel',
-    loadError: 'The page could not be loaded.',
+    loadError: 'The page could not be loaded. Check your internet connection.',
     retry: 'Try again',
-    back: 'Back to home',
   },
 };
 

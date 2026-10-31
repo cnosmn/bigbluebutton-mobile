@@ -21,8 +21,11 @@ Teknoloji yığını: Expo SDK 58, React Native 0.88, TypeScript, Expo Router.
 
 ```bash
 npm install
+cp .env.example .env.local   # EXPO_PUBLIC_PORTAL_URL: uygulamanın açılışta göstereceği site
 npm run android        # android/ klasörünü üretir, derler, bağlı cihaza kurar ve Metro'yu başlatır
 ```
+
+Uygulama açılınca `EXPO_PUBLIC_PORTAL_URL` adresini (öğretmenlerin giriş yapıp oda başlattığı site, örneğin Greenlight) doğrudan açar. Adres derleme sırasında uygulamaya gömülür. Değiştirdikten sonra Metro'yu `npx expo start --clear` ile yeniden başlatın.
 
 `android/` ve `ios/` klasörleri **üretilen** klasörlerdir ve repoya eklenmez (Expo Continuous Native Generation). Elle değiştirmeyin. Native ayarlar `app.config.ts`, `brand.json` ve config plugin'lerde tutulur. Yapılandırma değiştiğinde klasörü yeniden üretmek için:
 
