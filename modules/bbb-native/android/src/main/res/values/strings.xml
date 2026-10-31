@@ -1,0 +1,6 @@
+<resources>
+  <string name="bbb_screen_share_channel">Screen sharing</string>
+  <string name="bbb_screen_share_title">Your screen is being shared</string>
+  <string name="bbb_screen_share_text">Everyone in the class can see your screen.</string>
+  <string name="bbb_screen_share_stop">Stop sharing</string>
+</resources>

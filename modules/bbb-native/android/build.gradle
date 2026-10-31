@@ -16,3 +16,8 @@ android {
     abortOnError false
   }
 }
+
+dependencies {
+  // Native WebRTC for publishing the screen (Google's org.webrtc API, prebuilt by webrtc-sdk).
+  implementation 'io.github.webrtc-sdk:android:150.7871.01'
+}

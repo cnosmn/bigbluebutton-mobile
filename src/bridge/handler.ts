@@ -1,5 +1,7 @@
 import type { RefObject } from 'react';
 
+import { screenShareMethods } from './screenShare';
+
 // Protocol defined by BigBlueButton's web client
 // (bigbluebutton-html5/imports/ui/services/mobile-app/index.js):
 //   page -> app: window.ReactNativeWebView.postMessage({ sequence, method, arguments })
@@ -19,7 +21,7 @@ type BridgeCall = {
 
 type MethodImpl = (args: unknown[]) => Promise<unknown>;
 
-const methods: Record<string, MethodImpl> = {};
+const methods: Record<string, MethodImpl> = { ...screenShareMethods };
 
 function isBridgeCall(value: unknown): value is BridgeCall {
   const call = value as BridgeCall;

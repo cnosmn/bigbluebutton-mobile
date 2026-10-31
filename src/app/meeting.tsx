@@ -16,6 +16,7 @@ import { WebView } from 'react-native-webview';
 import type { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 
 import { handleBridgeMessage } from '../bridge/handler';
+import { attachScreenShareEvents } from '../bridge/screenShare';
 import { t } from '../i18n';
 import { meetingApplicationName, meetingUserAgent } from '../lib/userAgent';
 import { colors } from '../theme';
@@ -45,6 +46,9 @@ export default function Meeting() {
       { text: t.meeting.leave, style: 'destructive', onPress: () => router.back() },
     ]);
   }, []);
+
+  // Also stops any screen share when leaving the class.
+  useEffect(() => attachScreenShareEvents(webViewRef), []);
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
