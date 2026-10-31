@@ -1,0 +1,9 @@
+io.github.cnosmn.derslik.bbbnative.bbb-native-pngs-0 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/generated/res/pngs/debug
+io.github.cnosmn.derslik.bbbnative.bbb-native-updated_navigation_xml-1 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/generated/updated_navigation_xml/debug
+io.github.cnosmn.derslik.bbbnative.bbb-native-mergeDebugResources-2 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/intermediates/incremental/debug/mergeDebugResources/merged.dir
+io.github.cnosmn.derslik.bbbnative.bbb-native-mergeDebugResources-3 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/intermediates/incremental/debug/mergeDebugResources/stripped.dir
+io.github.cnosmn.derslik.bbbnative.bbb-native-debug-4 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/intermediates/merged_res/debug/mergeDebugResources
+io.github.cnosmn.derslik.bbbnative.bbb-native-debug-5 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/build/intermediates/packaged_res/debug/packageDebugResources
+io.github.cnosmn.derslik.bbbnative.bbb-native-debug-6 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/src/debug/res
+io.github.cnosmn.derslik.bbbnative.bbb-native-main-7 /home/cnosmn/Desktop/Dahili_projects/bbb_mobile/derslik/modules/bbb-native/android/src/main/res
+gradleHome-0 /home/cnosmn/.gradle

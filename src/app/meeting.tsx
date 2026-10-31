@@ -16,6 +16,7 @@ import { WebView } from 'react-native-webview';
 import type { ShouldStartLoadRequest } from 'react-native-webview/lib/WebViewTypes';
 
 import { t } from '../i18n';
+import { meetingUserAgent } from '../lib/userAgent';
 import { colors } from '../theme';
 
 // Schemes the meeting page itself may load; anything else (mailto:, tel:,
@@ -85,6 +86,7 @@ export default function Meeting() {
           key={webViewKey}
           source={{ uri: url }}
           style={styles.webview}
+          userAgent={meetingUserAgent()}
           domStorageEnabled
           thirdPartyCookiesEnabled
           mediaPlaybackRequiresUserAction={false}
@@ -95,7 +97,11 @@ export default function Meeting() {
           // target="_blank" links (chat links, exports) open in the browser.
           onOpenWindow={(event) => Linking.openURL(event.nativeEvent.targetUrl).catch(() => {})}
           onLoadEnd={() => setLoading(false)}
-          onError={() => setFailed(true)}
+          onError={(event) => {
+            const { code, description, url: failedUrl } = event.nativeEvent;
+            console.warn(`WebView load failed (${code}) ${description}: ${failedUrl}`);
+            setFailed(true);
+          }}
           onRenderProcessGone={() => setFailed(true)}
         />
       )}
