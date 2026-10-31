@@ -43,3 +43,7 @@ yarn-error.*
 # signing
 *.keystore
 keystore.properties
+
+# local module build outputs
+modules/*/android/build/
+modules/*/android/.cxx/
