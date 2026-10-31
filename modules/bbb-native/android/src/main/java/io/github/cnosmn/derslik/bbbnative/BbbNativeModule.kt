@@ -1,9 +1,11 @@
 package io.github.cnosmn.derslik.bbbnative
 
+import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.media.projection.MediaProjectionManager
+import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -56,16 +58,10 @@ class BbbNativeModule : Module() {
     // Shows the system "start recording or casting?" dialog and starts the
     // foreground service. Resolves once capturing is allowed.
     AsyncFunction("initializeScreenShare") { promise: Promise ->
-      val activity = appContext.currentActivity
-      if (activity == null) {
-        promise.reject("E_NO_ACTIVITY", "No activity to show the screen capture dialog", null)
-        return@AsyncFunction
-      }
       stopSession(notifyWeb = false)
       pendingConsent?.reject("E_SUPERSEDED", "A newer screen share request was made", null)
       pendingConsent = promise
-      val manager = activity.getSystemService(MediaProjectionManager::class.java)
-      activity.startActivityForResult(manager.createScreenCaptureIntent(), REQUEST_CONSENT)
+      withNotificationPermission { requestCaptureConsent() }
     }.runOnQueue(Queues.MAIN)
 
     OnActivityResult { _, payload ->
@@ -166,6 +162,35 @@ class BbbNativeModule : Module() {
     OnDestroy {
       mainHandler.post { stopSession(notifyWeb = false) }
     }
+  }
+
+  // Android 13+ hides notifications until the user allows them, which would
+  // hide the "your screen is being shared" notification and its stop action.
+  // Ask right before the first share, when the reason is obvious; sharing
+  // goes ahead whatever the answer.
+  private fun withNotificationPermission(then: () -> Unit) {
+    val permissions = appContext.permissions
+    if (
+      Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+      permissions == null ||
+      permissions.hasGrantedPermissions(Manifest.permission.POST_NOTIFICATIONS)
+    ) {
+      then()
+      return
+    }
+    permissions.askForPermissions({ _ -> mainHandler.post { then() } }, Manifest.permission.POST_NOTIFICATIONS)
+  }
+
+  private fun requestCaptureConsent() {
+    val promise = pendingConsent ?: return
+    val activity = appContext.currentActivity
+    if (activity == null) {
+      pendingConsent = null
+      promise.reject("E_NO_ACTIVITY", "No activity to show the screen capture dialog", null)
+      return
+    }
+    val manager = activity.getSystemService(MediaProjectionManager::class.java)
+    activity.startActivityForResult(manager.createScreenCaptureIntent(), REQUEST_CONSENT)
   }
 
   /**
