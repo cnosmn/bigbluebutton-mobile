@@ -7,4 +7,5 @@ export const colors = {
   text: '#111111',
   muted: '#5F6368',
   border: '#D9D9D9',
+  danger: '#C62828',
 };

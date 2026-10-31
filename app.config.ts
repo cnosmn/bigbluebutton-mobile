@@ -18,6 +18,12 @@ const config: ExpoConfig = {
   },
   android: {
     package: brand.androidPackage,
+    // Requested at runtime when the meeting page asks for microphone/camera.
+    permissions: [
+      'android.permission.CAMERA',
+      'android.permission.RECORD_AUDIO',
+      'android.permission.MODIFY_AUDIO_SETTINGS',
+    ],
     adaptiveIcon: {
       backgroundColor: brand.colors.primary,
       foregroundImage: brand.icons.androidForeground,
